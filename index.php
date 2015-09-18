@@ -196,6 +196,10 @@
 require_once BASEPATH . 'yii' . EXT;
 require_once APPPATH . 'core/LSYii_Application' . EXT;
 
+// Hook: Maestrano
+// Load Maestrano
+require_once ROOT . '/maestrano/init.php';
+
 $config = require_once(APPPATH . 'config/internal' . EXT);
 
 if (!file_exists(APPPATH . 'config/config' . EXT)) {    

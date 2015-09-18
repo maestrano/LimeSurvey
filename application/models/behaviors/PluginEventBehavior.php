@@ -48,13 +48,13 @@
 		 */
 	    public function dispatchPluginModelEvent($sEventName, $criteria = null)
 		{
-            $oPluginEvent = new PluginEvent($sEventName, $this);
-			$oPluginEvent->set('model', $this->owner);
-			if (isset($criteria))
-			{
-				$oPluginEvent->set('filterCriteria', $criteria);
-			}
-			return App()->getPluginManager()->dispatchEvent($oPluginEvent);
+   //          $oPluginEvent = new PluginEvent($sEventName, $this);
+			// $oPluginEvent->set('model', $this->owner);
+			// if (isset($criteria))
+			// {
+			// 	$oPluginEvent->set('filterCriteria', $criteria);
+			// }
+			// return App()->getPluginManager()->dispatchEvent($oPluginEvent);
 		}
 	}
 ?>

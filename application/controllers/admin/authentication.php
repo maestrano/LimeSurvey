@@ -42,6 +42,16 @@ class Authentication extends Survey_Common_Action
     {
         $this->_redirectIfLoggedIn();
 
+        // Hook:Maestrano
+        // Redirect to SSO login
+        if(Maestrano::sso()->isSsoEnabled()) {
+          $mnoSession = new Maestrano_Sso_Session($_SESSION);
+          if (!$mnoSession->isValid()) {
+            header('Location: ' . Maestrano::sso()->getInitPath());
+            exit;
+          }
+        }
+
         // Make sure after first run / update the authdb plugin is registered and active
         // it can not be deactivated
         if (!class_exists('Authdb', false)) {
@@ -134,6 +144,15 @@ class Authentication extends Survey_Common_Action
         /* Adding afterLogout event */
         $event = new PluginEvent('afterLogout');
         App()->getPluginManager()->dispatchEvent($event);
+
+        // Hook:Maestrano
+        if (Maestrano::sso()->isSsoEnabled()) {
+          header('Location: ' . Maestrano::sso()->getLogoutUrl());
+          exit;
+        } else {
+          header('Location: index.php');
+          exit;
+        }
 
         $this->getController()->redirect(array('/admin/authentication/sa/login'));
     }

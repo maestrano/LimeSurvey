@@ -24,7 +24,7 @@ class UserIdentity extends CUserIdentity
     * @access public
     * @return bool
     */
-    public function authenticate($sOneTimePassword='')
+    public function authenticate($sOneTimePassword='', $noPassword=false)
     {    
         if (Yii::app()->getConfig("auth_webserver")==false || $this->username != "")         
         {
@@ -55,7 +55,7 @@ class UserIdentity extends CUserIdentity
                 $this->user = $user;
                 $this->errorCode = self::ERROR_NONE;
             }
-            elseif ($sStoredPassword !== hash('sha256', $this->password))
+            elseif (!$noPassword && ($sStoredPassword !== hash('sha256', $this->password)))
             {
                 $this->errorCode = self::ERROR_PASSWORD_INVALID;
             }
