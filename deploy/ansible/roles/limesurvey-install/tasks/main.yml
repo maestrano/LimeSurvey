@@ -1,0 +1,149 @@
+# Include limesurvey specific configuration
+- include_vars: "{{ item }}"
+  with_items:
+    - limesurvey.yml
+    - version.yml
+  tags:
+    - configuration
+    - update
+
+- name: General | Install Application packages
+  apt: "name={{ item }} state=present"
+  with_items:
+    - git
+    - curl
+
+- name: LimeSurvey | Ensure MySQL is running
+  command: service mysql start
+  ignore_errors: yes
+  tags:
+    - configuration
+
+- name: LimeSurvey | Create LimeSurvey database
+  mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    db: "{{ limesurvey_db_name }}"
+    state: present
+
+- name: LimeSurvey | Create LimeSurvey database user
+  mysql_user:
+    name: "{{ limesurvey_db_user }}"
+    password: "{{ limesurvey_db_password }}"
+    priv: "{{ limesurvey_db_name }}.*:ALL,GRANT"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: LimeSurvey | Download application from Github
+  sudo: false
+  git:
+    repo: "https://github.com/{{ application_repository }}/LimeSurvey.git"
+    dest: "{{ limesurvey_root_path }}"
+    version: "{{ application_version }}"
+    accept_hostkey: yes
+    ssh_opts: "-o StrictHostKeyChecking=no"
+    update: yes
+    force: yes
+  tags:
+    - update
+
+- name: LimeSurvey | Current commit hash
+  shell: 'git log -n 1 --pretty=format:"%H" > {{ limesurvey_root_path }}/.git-version'
+  args:
+    chdir: "{{ limesurvey_root_path }}"
+  tags:
+    - update
+
+- name: Git | Ignore files permissions changes
+  command: "git config core.filemode false chdir={{ limesurvey_root_path }}"
+  tags:
+    - update
+
+- name: Ansible | Update scripts
+  copy:
+    src: "{{ limesurvey_root_path }}/deploy/ansible"
+    dest: /etc/
+  tags:
+    - update
+
+- name: LimeSurvey | Configure Apache virtual host
+  template: 
+    src: etc-apache24-confd-limesurvey-conf
+    dest: /etc/apache2/sites-available/limesurvey.conf
+    owner: root
+    mode: 755
+  tags:
+    - configuration
+
+- name: LimeSurvey | Enable Apache virtual host 
+  file: src=/etc/apache2/sites-available/limesurvey.conf dest=/etc/apache2/sites-enabled/limesurvey.conf state=link
+  tags:
+    - configuration
+
+- name: Apache | Restart the Apache service
+  service: 
+    name: apache2 
+    state: restarted
+
+- name: LimeSurvey | Configuration file limesurvey-config.php
+  template: 
+    src: limesurvey-config.php
+    dest: "{{ limesurvey_root_path }}/application/config/config.php"
+    owner: www-data
+    mode: 755
+  tags:
+    - configuration
+
+- name: LimeSurvey | Configuration file maestrano.json
+  template: 
+    src: limesurvey-maestrano.json
+    dest: "{{ limesurvey_root_path }}/maestrano.json"
+    owner: www-data
+    group: www-data
+    mode: 777
+  tags:
+    - configuration
+
+- name: LimeSurvey | Setup LimeSurvey database
+  shell: "mysql {{ limesurvey_db_name }} -u{{ limesurvey_db_user }} -p{{ limesurvey_db_password }} < {{ item }}"
+  with_items:
+    - maestrano/app/db/0_base_schema.sql
+    - maestrano/app/db/1_add_mno_uid_field.sql
+  args:
+    chdir: "{{ limesurvey_root_path }}"
+
+- name: LimeSurvey | Set file permissions
+  file:
+    path: "{{ limesurvey_root_path }}"
+    mode: 0755
+    owner: www-data
+    group: www-data
+    state: directory
+    recurse: yes
+  tags:
+    - configuration
+
+- name: LimeSurvey | Set log files permissions
+  file:
+    path: /var/log/apache2
+    mode: 0755
+    owner: www-data
+    group: www-data
+    state: directory
+    recurse: yes
+  tags:
+    - configuration
+
+- name: LimeSurvey | Set directory write permissions
+  file:
+    path: "{{ item }}"
+    mode: 0777
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ limesurvey_root_path }}/tmp"
+    - "{{ limesurvey_root_path }}/upload"
+    - "{{ limesurvey_root_path }}/application/config"
+  tags:
+    - configuration

@@ -57,7 +57,7 @@ $internalConfig = array(
                 'remotecontrol'
             ),
 
-            'enableCsrfValidation'=>true,    // CSRF protection
+            'enableCsrfValidation'=>false,    // CSRF protection
             'enableCookieValidation'=>false   // Enable to activate cookie protection
         ),
         'user' => array(

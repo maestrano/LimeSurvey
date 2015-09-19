@@ -1,0 +1,10 @@
+---
+
+# This playbook installs and configures LimeSurvey
+- hosts: localhost
+  connection: local
+  roles:
+    - apache
+    - mysql
+    - ssmtp
+    - limesurvey-install
