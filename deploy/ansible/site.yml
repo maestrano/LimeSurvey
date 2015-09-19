@@ -1,6 +1,6 @@
 ---
 
-# This playbook installs and configures vTiger6
+# This playbook installs and configures LimeSurvey
 - hosts: localhost
   connection: local
   roles:

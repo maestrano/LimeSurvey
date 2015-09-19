@@ -1,10 +1,10 @@
-# vTiger installation
+# LimeSurvey installation
 limesurvey_db_user: limesurvey
 limesurvey_db_password: limesurvey
 limesurvey_db_name: limesurvey
 limesurvey_root_path: /var/lib/limesurvey/webapp/
 
-# vTiger default configuration
+# LimeSurvey default configuration
 sso_enabled: "false"
 connec_enabled: "false"
 maestrano_environment: "production"
