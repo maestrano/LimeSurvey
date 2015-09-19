@@ -32,13 +32,6 @@ return array(
 			'tablePrefix' => 'lime_',
 		),
 		
-		// Uncomment the following line if you need table-based sessions
-		// 'session' => array (
-			// 'class' => 'system.web.CDbHttpSession',
-			// 'connectionID' => 'db',
-			// 'sessionTableName' => '{{sessions}}',
-		// ),
-		
 		'urlManager' => array(
 			'urlFormat' => 'path',
 			'rules' => require('routes.php'),
