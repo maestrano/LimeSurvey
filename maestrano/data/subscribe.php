@@ -1,6 +1,7 @@
 <?php
 
 require_once '../init.php';
+require_once MAESTRANO_ROOT . '/connec/init.php';
 
 // Set default user for entities creation
 global $current_user;
