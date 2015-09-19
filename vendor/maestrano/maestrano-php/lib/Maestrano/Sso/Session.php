@@ -177,42 +177,42 @@ class Maestrano_Sso_Session extends Maestrano_Util_PresetObject
   }
 
   public function getUid() {
-  	return $this->uid;
+    return $this->uid;
   }
 
   public function getGroupUid() {
-  	return $this->groupUid;
+    return $this->groupUid;
   }
 
   public function getRecheck() {
-  	return $this->recheck;
+    return $this->recheck;
   }
 
   public function getSessionToken() {
-  	return $this->sessionToken;
+    return $this->sessionToken;
   }
 
   public function getHttpSession() {
-  	return $this->httpSession;
+    return $this->httpSession;
   }
 
   public function setUid($uid) {
-  	$this->uid = $this->uid;
+    $this->uid = $this->uid;
   }
 
   public function setGroupUid($groupUid) {
-  	$this->groupUid = $groupUid;
+    $this->groupUid = $groupUid;
   }
 
   public function setRecheck($recheck) {
-  	$this->recheck = $recheck;
+    $this->recheck = $recheck;
   }
 
   public function setSessionToken($sessionToken) {
-  	$this->sessionToken = $sessionToken;
+    $this->sessionToken = $sessionToken;
   }
 
   public function setHttpSession($httpSession) {
-  	$this->httpSession = $httpSession;
+    $this->httpSession = $httpSession;
   }
 }
