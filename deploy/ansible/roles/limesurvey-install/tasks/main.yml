@@ -147,3 +147,11 @@
     - "{{ limesurvey_root_path }}/application/config"
   tags:
     - configuration
+
+- name: LimeSurvey | Import Connec! data
+  shell: "(nohup php initialize.php 1>/var/log/apache2/limesurvey_initialize.log 2>&1) &"
+  args:
+    chdir: "{{ limesurvey_root_path }}/maestrano/scripts"
+  sudo_user: www-data
+  tags:
+    - configuration
