@@ -34,7 +34,7 @@
                 "invoices": false,
                 "items": false,
                 "journals": false,
-                "organizations": true,
+                "organizations": false,
                 "payments": false,
                 "pay_items": false,
                 "pay_schedules": false,

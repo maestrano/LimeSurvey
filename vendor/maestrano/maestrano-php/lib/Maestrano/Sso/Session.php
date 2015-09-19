@@ -119,19 +119,21 @@ class Maestrano_Sso_Session extends Maestrano_Util_PresetObject
      *
      * @return boolean the validity of the session
      */
-     public function performRemoteCheck($httpClient = null) {
-       $json = $this->fetchUrl($this->getSessionCheckUrl(), $httpClient);
-       if ($json) {
+    public function performRemoteCheck($httpClient = null) {
+      if(empty($this->sessionToken)) { return false; }
+      
+      $json = $this->fetchUrl($this->getSessionCheckUrl(), $httpClient);
+      if ($json) {
         $response = json_decode($json,true);
 
         if ($response['valid'] == "true" && $response['recheck'] != null) {
           $this->recheck = new DateTime($response['recheck']);
           return true;
         }
-       }
+      }
 
-       return false;
-     }
+      return false;
+    }
 
   /**
   * Perform check to see if session is valid
@@ -143,13 +145,10 @@ class Maestrano_Sso_Session extends Maestrano_Util_PresetObject
   * @return boolean the validity of the session
   */
   public function isValid($ifSession = false, $httpClient = null) {
+    if ($ifSession) { return true; }
+    
     $svc = Maestrano::with($this->_preset)->sso();
-
     if (!$svc->isSloEnabled()) return true;
-
-    if ($ifSession) {
-      return true;
-    }
 
     if (!$this->ssoTokenExists() || $this->isRemoteCheckRequired()) {
       if ($this->performRemoteCheck($httpClient)) {

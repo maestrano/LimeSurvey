@@ -35,7 +35,7 @@
                 "accounts": false,
                 "tax_codes": false,
                 "tax_rates": false,
-                "organizations": true,
+                "organizations": false,
                 "people": true,
                 "items": false,
                 "opportunities": false,
