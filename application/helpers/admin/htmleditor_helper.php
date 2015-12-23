@@ -109,7 +109,6 @@
 
     function PrepareEditorScript($load=false, $controller = null)
     {
-        App()->getClientScript()->registerCoreScript('ckeditor');
         if ($controller == null)
         {
             $controller = Yii::app()->getController();
@@ -148,14 +147,7 @@
         {
             $htmleditormode = $session['htmleditormode'];
         }
-
-        if ( ($fieldtype == 'email-inv' ||
-        $fieldtype == 'email-reg' ||
-        $fieldtype == 'email-admin-notification' ||
-        $fieldtype == 'email-admin-resp' ||
-        $fieldtype == 'email-conf' ||
-        $fieldtype == 'email-rem' ) &&
-        getEmailFormat($surveyID) != 'html')
+        if ( $surveyID && getEmailFormat($surveyID) != 'html' && substr($fieldtype,0,6)==="email-" )// email but survey as text email
         {
             return '';
         }
