@@ -469,12 +469,15 @@ function XMLImportQuestion($sFullFilePath, $iNewSID, $newgid)
             foreach ($insertdata as $k => $v)
                 $ques->$k = $v;
             $result = $ques->save();
-            $newsqid=getLastInsertID($ques->tableName());
-            if (!isset($insertdata['qid']))
+            if ($result)
             {
-                $aQIDReplacements[$oldsqid]=$newsqid; // add old and new qid to the mapping array
+                $newsqid=getLastInsertID($ques->tableName());
+                if (!isset($insertdata['qid']))
+                {
+                    $aQIDReplacements[$oldsqid]=$newsqid; // add old and new qid to the mapping array
+                }
+                $results['subquestions']++;
             }
-            $results['subquestions']++;
         }
     }
 
@@ -765,7 +768,7 @@ function importSurveyFile($sFullFilePath, $bTranslateLinksFields, $sNewSurveyNam
                 else
                 {
                     $aTokenCreateResults = array('tokentablecreated' => false);
-                    $aTokenImportResults['warnings'][] = gt("Unable to create token table");
+                    $aTokenImportResults['warnings'][] = gT("Unable to create token table");
 
                 }
                 $aImportResults = array_merge_recursive($aTokenImportResults, $aImportResults);
