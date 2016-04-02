@@ -68,7 +68,7 @@
     - update
 
 - name: LimeSurvey | Configure Apache virtual host
-  template: 
+  template:
     src: etc-apache24-confd-limesurvey-conf
     dest: /etc/apache2/sites-available/limesurvey.conf
     owner: root
@@ -76,18 +76,18 @@
   tags:
     - configuration
 
-- name: LimeSurvey | Enable Apache virtual host 
+- name: LimeSurvey | Enable Apache virtual host
   file: src=/etc/apache2/sites-available/limesurvey.conf dest=/etc/apache2/sites-enabled/limesurvey.conf state=link
   tags:
     - configuration
 
 - name: Apache | Restart the Apache service
-  service: 
-    name: apache2 
+  service:
+    name: apache2
     state: restarted
 
 - name: LimeSurvey | Configuration file limesurvey-config.php
-  template: 
+  template:
     src: limesurvey-config.php
     dest: "{{ limesurvey_root_path }}/application/config/config.php"
     owner: www-data
@@ -96,7 +96,7 @@
     - configuration
 
 - name: LimeSurvey | Configuration file maestrano.json
-  template: 
+  template:
     src: limesurvey-maestrano.json
     dest: "{{ limesurvey_root_path }}/maestrano.json"
     owner: www-data
@@ -152,6 +152,7 @@
   shell: "(nohup php initialize.php 1>/var/log/apache2/limesurvey_initialize.log 2>&1) &"
   args:
     chdir: "{{ limesurvey_root_path }}/maestrano/scripts"
-  sudo_user: www-data
+  become: yes
+  become_user: www-data
   tags:
     - configuration
