@@ -9,3 +9,8 @@
 </IfModule>
 # General setting to properly handle LimeSurvey paths
 # AcceptPathInfo on
+
+<Files "maestrano.json">
+  Order Allow,Deny
+  Deny from all
+</Files>
